@@ -8,7 +8,7 @@ describe Oystercard do
   describe "#top_up" do
     it { is_expected.to respond_to(:top_up).with(1).argument }
     it "adds money to card" do
-      expect{ subject.top_up 1 }.to change{ subject.balance}.by 1
+      expect{ subject.top_up 1 }.to change{ subject.balance }.by 1
     end
 
     it 'raises an error when limit exceeded' do
@@ -17,7 +17,7 @@ describe Oystercard do
   end
   describe "#deduct" do
     it "takes away a specific amount of money from the balance" do
-      expect{ subject.deduct 3 }.to change{ subject.balance}.by -3
+      expect{ subject.deduct 3 }.to change{ subject.balance }.by -3
     end
   end
   describe '#in_journey?' do
@@ -37,6 +37,10 @@ describe Oystercard do
   end
 
   describe '#touch_out' do
+    it 'deducts money from balance when touched out' do
+      subject.top_up(1)
+      expect{ subject.touch_out }.to change{ subject.balance }.by -1
+    end
     it 'changes in_use status to false' do
       expect(subject.touch_out).to eq false
     end
