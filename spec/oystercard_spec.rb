@@ -20,4 +20,21 @@ describe Oystercard do
       expect{ subject.deduct 3 }.to change{ subject.balance}.by -3
     end
   end
+  describe '#in_journey?' do
+    it 'returns false if card is not in use' do
+      expect(subject.in_journey?).to eq false
+    end
+  end
+
+  describe '#touch_in' do
+    it 'changes in_use status to true' do
+      expect(subject.touch_in).to eq true
+    end
+  end
+
+  describe '#touch_out' do
+    it 'changes in_use status to false' do
+      expect(subject.touch_out).to eq false
+    end
+  end
 end
