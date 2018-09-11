@@ -6,13 +6,17 @@ describe Oystercard do
     expect(subject.balance).to eq 0
   end
   describe "#top_up" do
-    it { is_expected.to respond_to(:top_up).with(1).argument }
     it "adds money to card" do
       expect{ subject.top_up 1 }.to change{ subject.balance }.by 1
     end
 
     it 'raises an error when limit exceeded' do
       expect{ subject.top_up(91) }.to raise_error "Maximum limit exceeded!!"
+    end
+
+    it 'raises an error when top up twice and limit exceeded' do
+      subject.top_up(50)
+      expect{ subject.top_up(41) }.to raise_error "Maximum limit exceeded!!"
     end
   end
   describe "#deduct" do
@@ -26,18 +30,26 @@ describe Oystercard do
     end
   end
 
+
   describe '#touch_in' do
-    it 'changes in_journey status to true' do
-      subject.top_up(1)
-      expect(subject.touch_in('start_point')).to eq true
+    context 'when balance too low' do
+      it 'raises an error if balance is less than 1 when touching in' do
+        expect{ subject.touch_in('start_point') }.to raise_error "Sorry, the minimum balance needed is £1"
+      end
     end
-    it 'raises an error if balance is less than 1 when touching in' do
-      expect{ subject.touch_in('start_point') }.to raise_error "Sorry, the minimum balance needed is £1"
-    end
-    it 'saves the station of entry' do
-      subject.top_up(1)
-      subject.touch_in('aldgate')
-      expect(subject.station).to eq ['aldgate']
+    context 'when balance above MINIMUM_BALANCE' do
+      before do
+        subject.top_up(1)
+        subject.touch_in('aldgate')
+      end
+
+      it 'changes in_journey status to true' do
+        expect(subject.in_journey?).to eq true
+      end
+
+      it 'saves the station of entry' do
+        expect(subject.station).to eq 'aldgate'
+      end
     end
   end
 
