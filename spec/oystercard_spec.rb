@@ -34,7 +34,7 @@ describe Oystercard do
     end
   end
   describe '#in_journey?' do
-    it 'returns false if card is not in use' do
+    it 'returns false on initialization' do
       expect(subject.in_journey?).to eq false
     end
   end
@@ -56,10 +56,6 @@ describe Oystercard do
         expect(subject.in_journey?).to eq true
       end
 
-      it 'saves the station of entry' do
-        expect(subject.entry_station).to eq station
-      end
-
       it 'records entry station to journey_hash' do
         expect(subject.journey_hash).to eq({entry_station: station})
       end
@@ -70,8 +66,10 @@ describe Oystercard do
     before do
       subject.top_up(10)
       subject.touch_in(station)
-      subject.touch_out
+      subject.touch_out(station)
     end
+
+    it {is_expected.to respond_to(:touch_out).with(1).argument}
 
     it 'deducts money from balance when touched out' do
       expect(subject.balance).to eq(9)
@@ -81,8 +79,12 @@ describe Oystercard do
       expect(subject.in_journey?).to eq false
     end
 
-    it 'sets entry_station to nil' do
-      expect(subject.entry_station).to eq(nil)
+    it 'adds complete journey_hash to @journeys array' do
+      expect(subject.journeys).to eq([{entry_station: station, exit_station: station}])
+    end
+
+    it 'resets journey_hash to empty hash' do
+      expect(subject.journey_hash).to eq({})
     end
   end
 end
