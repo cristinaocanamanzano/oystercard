@@ -2,9 +2,18 @@ require './lib/oystercard'
 
 describe Oystercard do
   let(:station) { double(:station) }
-  it 'shows us the balance of a new card' do
-    expect(subject.balance).to eq 0
+  describe 'initialization test' do
+    it 'shows us the balance of a new card' do
+      expect(subject.balance).to eq 0
+    end
+    it '@journeys is an empty array' do
+      expect(subject.journeys).to eq []
+    end
+    it '@journey_hash is an empty hash' do
+      expect(subject.journey_hash).to eq({})
+    end
   end
+
   describe "#top_up" do
     it "adds money to card" do
       expect{ subject.top_up 1 }.to change{ subject.balance }.by 1
@@ -50,6 +59,10 @@ describe Oystercard do
       it 'saves the station of entry' do
         expect(subject.entry_station).to eq station
       end
+
+      it 'records entry station to journey_hash' do
+        expect(subject.journey_hash).to eq({entry_station: station})
+      end
     end
   end
 
@@ -67,9 +80,9 @@ describe Oystercard do
     it 'changes in_journey status to false' do
       expect(subject.in_journey?).to eq false
     end
-    
+
     it 'sets entry_station to nil' do
-      expect(subject.entry_station).to eq(nil) 
+      expect(subject.entry_station).to eq(nil)
     end
   end
 end
