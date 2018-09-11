@@ -2,11 +2,10 @@
 class Oystercard
   CARD_LIMIT = 90
   MINIMUM_BALANCE = 1
-  attr_reader :balance, :entry_station, :journeys, :journey_hash
+  attr_reader :balance, :journeys, :journey_hash
 
   def initialize
     @balance = 0
-    @entry_station = nil
     @journeys = []
     @journey_hash = {}
   end
@@ -21,19 +20,31 @@ class Oystercard
   end
 
   def in_journey?
-    @entry_station != nil
+    !(@journey_hash.empty?)
   end
 
   def touch_in(start_point)
-    @entry_station = start_point
     fail "Sorry, the minimum balance needed is £1" if @balance < MINIMUM_BALANCE
     @in_journey = true
-    @journey_hash[:entry_station] = start_point
+    add_station(:entry_station, start_point)
   end
 
-  def touch_out
+  def touch_out(exit_point)
     deduct(MINIMUM_BALANCE)
-    @in_journey = false
-    @entry_station = nil
+    add_station(:exit_station, exit_point)
+    record_journey
+    clear_journey_hash
+  end
+
+  def add_station(point, station)
+    @journey_hash[point] = station
+  end
+
+  def record_journey
+    @journeys << @journey_hash
+  end
+  
+  def clear_journey_hash
+    @journey_hash = {}
   end
 end
