@@ -29,10 +29,15 @@ describe Oystercard do
   describe '#touch_in' do
     it 'changes in_journey status to true' do
       subject.top_up(1)
-      expect(subject.touch_in).to eq true
+      expect(subject.touch_in('start_point')).to eq true
     end
     it 'raises an error if balance is less than 1 when touching in' do
-      expect{ subject.touch_in }.to raise_error "Sorry, the minimum balance needed is £1"
+      expect{ subject.touch_in('start_point') }.to raise_error "Sorry, the minimum balance needed is £1"
+    end
+    it 'saves the station of entry' do
+      subject.top_up(1)
+      subject.touch_in('aldgate')
+      expect(subject.station).to eq ['aldgate']
     end
   end
 
