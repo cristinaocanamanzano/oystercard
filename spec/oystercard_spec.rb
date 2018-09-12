@@ -2,6 +2,9 @@ require './lib/oystercard'
 
 describe Oystercard do
   let(:station) { double(:station) }
+  let(:entry_station) { double :station }
+  let(:exit_station) { double :station }
+  
   describe 'initialization test' do
     it 'shows us the balance of a new card' do
       expect(subject.balance).to eq 0
@@ -38,7 +41,6 @@ describe Oystercard do
       expect(subject.in_journey?).to eq false
     end
   end
-
 
   describe '#touch_in' do
     context 'when balance too low' do

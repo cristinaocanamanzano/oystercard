@@ -1,4 +1,3 @@
-
 class Oystercard
   CARD_LIMIT = 90
   MINIMUM_BALANCE = 1
@@ -43,7 +42,7 @@ class Oystercard
   def record_journey
     @journeys << @journey_hash
   end
-  
+
   def clear_journey_hash
     @journey_hash = {}
   end
