@@ -12,9 +12,6 @@ describe Oystercard do
     it '@journeys is an empty array' do
       expect(subject.journeys).to eq []
     end
-    it '@journey_hash is an empty hash' do
-      expect(subject.journey_hash).to eq({})
-    end
   end
 
   describe "#top_up" do
@@ -31,11 +28,13 @@ describe Oystercard do
       expect{ subject.top_up(41) }.to raise_error "Maximum limit exceeded!!"
     end
   end
+
   describe "#deduct" do
     it "takes away a specific amount of money from the balance" do
       expect{ subject.deduct 3 }.to change{ subject.balance }.by -3
     end
   end
+
   describe '#in_journey?' do
     it 'returns false on initialization' do
       expect(subject.in_journey?).to eq false
@@ -48,6 +47,7 @@ describe Oystercard do
         expect{ subject.touch_in(station) }.to raise_error "Sorry, the minimum balance needed is £1"
       end
     end
+
     context 'when balance above MINIMUM_BALANCE' do
       before do
         subject.top_up(1)
